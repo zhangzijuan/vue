@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title>vue 练习</title>
+		
+		<script src="https://unpkg.com/vue"></script>
+		
+		
+		<style>
+			.item span{
+				display: block;
+				width: 100%;
+			}
+		</style>
+		
+	</head>
+	<body>
+		<div id="firstApp">
+			<h2 v-bind:title="tipText">{{message}}</h2>
+			<div class="item">
+				<span v-for="goods in goodsList">{{goods.goodsName}}</span>
+			</div>
+			<div class="init-extend"></div>
+			
+		</div>
+		
+		<script>
+			var firstApp = new Vue({
+				el:'#firstApp',
+				data:{
+					tipText:'我是提示消息。。。。',
+					message:'hello world!',
+					goodsList:[
+						{goodsName:'衣服'},
+						{goodsName:'鞋子'},
+						{goodsName:'钱包'},
+						{goodsName:'手机'},
+					]
+				}
+			});
+			
+			firstApp.tipText = "我不是提示消息。。。";
+			
+			//数据被重新修改，dom更新监控时间
+			Vue.nextTick(function(){
+				console.log(333);
+			});
+			
+			var Profile = Vue.extend({
+				template:'<p>{{firstName}} {{lastName}} aka {{alias}}</p>',
+				data:function(){
+					return {
+						'firstName':'zhang',
+						'lastName':'zijuan',
+						'alias':'azi'
+					}
+				}
+			});
+			new Profile().$mount('.init-extend');
+			
+			//自定义组件
+			Vue.component('define-title',Vue.extend({
+				props:['defineTitleName'],
+				template:'<h3>我是自定义标题{{defineTitleName}}</h3>',
+				data:function(){
+					return {
+						'defineTitleName':'4444'
+					}
+				}
+			}));
+			var defineTitleComponent = Vue.component('define-title');
+			//alert(defineTitleComponent);
+			
+			//计算属性
+			var vm = new Vue({
+				data:{'a':2},
+				computed:{
+					aDouble:function(){
+						return this.a * 2;
+					},
+					aPlus:{
+						get:function(){
+							return this.a +3;
+						},
+						set:function(v){
+							this.a = v;
+						}
+					}
+				},
+				methods:{
+					plus:function(){
+						return this.a++;
+					}
+				}
+			});
+			//alert(vm.a);
+			vm.aPlus = 5; 
+			//alert(vm.a);
+			//alert(vm.aDouble);
+			//alert(vm.aPlus);
+			vm.plus();
+			//alert(vm.a);
+			
+			//检查属性变动
+			var vmWatch = new Vue({
+			  data: {
+			    a: 1,
+			    b: 2,
+			    c: 3
+			  },
+			  watch: {
+			    a: function (val, oldVal) {
+			    		alert('newValue:'+val);
+			      console.log('new: %s, old: %s', val, oldVal)
+			    },
+			    // 方法名
+			    b: 'someMethod',
+			    // 深度 watcher
+			    c: {
+			      handler: function (val, oldVal) { 
+			      		alert('cNewValue:'+val);
+			      },
+			      deep: true
+			    }
+			  }
+			});
+			vmWatch.a = 2 // => new: 2, old: 1
+			vmWatch.c = 4
+			
+			
+		</script>
+	</body>
+</html>
